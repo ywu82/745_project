@@ -1,0 +1,26 @@
+# Rule 1
+# 这个规则适合检测 DNS tunnel 的通用特征
+# alert dns any any -> any any (
+#     msg:"Suspicious DNS TXT query with long query name - possible DNS tunneling";
+#     dns.rrtype:TXT;
+#     dns.query;
+#     bsize:>100;
+#     sid:9000003;
+#     rev:1;
+# )
+alert dns any any -> any any (msg:"Suspicious DNS TXT query with long query name - possible DNS tunneling"; dns.rrtype:TXT; dns.query; bsize:>100; sid:9000003; rev:1;)
+
+
+# Rule 2
+# 检测 iodine 风格 TXT tunnel，域名 + 长度组合
+# alert dns any any -> any any (
+#     msg:"Likely iodine DNS tunnel - long TXT query under ggy666.tk";
+#     dns.rrtype:TXT;
+#     dns.query;
+#     content:"ggy666.tk";
+#     nocase;
+#     bsize:>80;
+#     sid:9000005;
+#     rev:1;
+# )
+alert dns any any -> any any (msg:"Likely iodine DNS tunnel - long TXT query under ggy666.tk"; dns.rrtype:TXT; dns.query; content:"ggy666.tk"; nocase; bsize:>80; sid:9000005; rev:1;)

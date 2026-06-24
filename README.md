@@ -1,0 +1,251 @@
+# 1. Set Up the WSL2 Environment on the Server Side
+
+## 1.1 WSL2 and Ubuntu Setup
+
+1. Open PowerShell as Administrator.
+
+Search for `PowerShell` from the Start menu. Right-click it and select **Run as administrator**.
+
+2. Check the available Ubuntu versions.
+
+```bash
+wsl --list --online
+```
+
+You should see something similar to the following:
+
+```bash
+NAME                               FRIENDLY NAME
+Ubuntu                             Ubuntu
+Ubuntu-26.04                       Ubuntu 26.04 LTS
+Ubuntu-24.04                       Ubuntu 24.04 LTS
+Ubuntu-22.04                       Ubuntu 22.04 LTS
+openSUSE-Tumbleweed                openSUSE Tumbleweed
+openSUSE-Leap-16.0                 openSUSE Leap 16.0
+SUSE-Linux-Enterprise-15-SP7       SUSE Linux Enterprise 15 SP7
+SUSE-Linux-Enterprise-16.0         SUSE Linux Enterprise 16.0
+kali-linux                         Kali Linux Rolling
+Debian                             Debian GNU/Linux
+AlmaLinux-8                        AlmaLinux OS 8
+AlmaLinux-9                        AlmaLinux OS 9
+AlmaLinux-Kitten-10                AlmaLinux OS Kitten 10
+AlmaLinux-10                       AlmaLinux OS 10
+archlinux                          Arch Linux
+FedoraLinux-44                     Fedora Linux 44
+FedoraLinux-43                     Fedora Linux 43
+eLxr                               eLxr 12.12.0.0 GNU/Linux
+OracleLinux_7_9                    Oracle Linux 7.9
+OracleLinux_8_10                   Oracle Linux 8.10
+OracleLinux_9_5                    Oracle Linux 9.5
+SUSE-Linux-Enterprise-15-SP6       SUSE Linux Enterprise 15 SP6
+```
+
+3. Install Ubuntu.
+
+The Ubuntu installation command is:
+
+```bash
+wsl --install -d Ubuntu-xxxx
+```
+
+Replace `xxxx` with the version number shown in the available distribution list.
+
+4. Create the `student` user.
+
+Username:
+
+```bash
+student
+```
+
+Password:
+
+```bash
+user745
+```
+
+5. Verify the WSL2 environment.
+
+Open a new PowerShell window and run:
+
+```bash
+wsl -l -v
+```
+
+If you see something similar to the following:
+
+```bash
+NAME            STATE           VERSION
+Ubuntu-xxxx     Running         2
+```
+
+it means the installation was successful and the system is running on WSL2.
+
+If the `VERSION` shows `1`, run:
+
+```bash
+wsl --set-version Ubuntu-xxx 2
+```
+
+## 1.2 Install the SSH Service
+
+1. Install OpenSSH Server.
+
+Run the following commands inside WSL2:
+
+```bash
+sudo apt update
+sudo apt install openssh-server -y
+```
+
+2. Start the SSH service.
+
+```bash
+sudo service ssh start
+```
+
+Check the SSH service status:
+
+```bash
+sudo service ssh status
+```
+
+If you see something similar to:
+
+```bash
+sshd is running
+```
+
+it means the SSH server has started successfully.
+
+## 1.3 Install and Configure Ngrok
+
+1. Install the required basic tools.
+
+Run the following command inside Ubuntu:
+
+```bash
+sudo apt update
+sudo apt install curl unzip -y
+```
+
+2. Install ngrok.
+
+It is recommended to install ngrok using the official apt repository. The official ngrok Linux download page provides the Linux installation method and authtoken configuration steps.
+
+2.1 Run the following command inside WSL Ubuntu:
+
+```bash
+curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc \
+| sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null
+```
+
+2.2 Add the ngrok apt repository:
+
+```bash
+echo "deb https://ngrok-agent.s3.amazonaws.com buster main" \
+| sudo tee /etc/apt/sources.list.d/ngrok.list
+```
+
+2.3 Update the package list and install ngrok:
+
+```bash
+sudo apt update
+sudo apt install ngrok -y
+```
+
+3. Check the ngrok version.
+
+```bash
+ngrok version
+```
+
+4. Log in to your ngrok account and configure the authtoken.
+
+Register or log in to the ngrok website, then copy your authtoken from the dashboard.
+
+Run the following command inside WSL Ubuntu:
+
+```bash
+ngrok config add-authtoken <TOKEN>
+```
+
+The official ngrok documentation states that the ngrok agent requires an authtoken for authentication. The command format is:
+
+```bash
+ngrok config add-authtoken <TOKEN>
+```
+
+## 1.4 Configure the Required Python Dependencies on the Server Side
+
+The server-side files are located in:
+
+```bash
+/remote_connect/ngrok/server/
+```
+
+1. Install the dependencies.
+
+```bash
+pip install requests pymongo python-dotenv
+```
+
+Or:
+
+```bash
+pip3 install requests pymongo python-dotenv
+```
+
+2. Configure the secret key.
+
+In `consts.py`, find `MONGO_URI` and add the connection string for MongoDB Atlas.
+
+3. Start the service.
+
+```bash
+python3 ngrok.py
+```
+
+Or:
+
+```bash
+python ngrok.py
+```
+
+# 2. Client-Side Configuration
+
+The client-side files are located in:
+
+```bash
+/remote_connect/ngrok/client/
+```
+
+1. Install the dependencies.
+
+```bash
+pip install requests pymongo python-dotenv
+```
+
+Or:
+
+```bash
+pip3 install requests pymongo python-dotenv
+```
+
+2. Configure the secret key.
+
+In `consts.py`, find `MONGO_URI` and add the connection string for MongoDB Atlas.
+
+3. Start the service.
+
+```bash
+python3 ssh.py
+```
+
+Or:
+
+```bash
+python ssh.py
+```
+
+# 3. Install and Configure OpenClaw
