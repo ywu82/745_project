@@ -434,3 +434,25 @@ Then make `SKILL.md` mention that this reference should be read when more detail
 - The exact prompt I should use later to analyze a log file with this skill.
 
 ```
+use command to find gateway token:
+```bash
+grep -n "073178fb4b5404b44628e5c8e8ffd71543a5fa788c8aa5e2\|324c4f337b36cdbc406ef689f309ee5d401e07e7e5c619892972a354f09d2694\|gateway\|token\|auth\|secret" /home/student/.openclaw/openclaw.json
+```
+Run the test procedue:
+
+```bash
+openclaw gateway restart
+```
+
+```bash
+python3 ids_monitor.py
+```
+
+```bash
+sudo rm -f fast.log eve.json stats.log && sudo suricata -r ~/745_project/iodine-txt.pcap
+```
+
+
+
+
+
