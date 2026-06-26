@@ -248,4 +248,128 @@ Or:
 python ssh.py
 ```
 
-# 3. Install and Configure OpenClaw
+# 3. IDS and Software Installation on the Server Side
+
+## 3.1 Suricata Setup in WSL2
+
+Install Suricata and required packages:
+
+```bash
+sudo apt update
+sudo apt install -y software-properties-common
+sudo add-apt-repository ppa:oisf/suricata-stable
+sudo apt update
+sudo apt install -y suricata jq
+```
+
+Check the installed Suricata version:
+
+```bash
+suricata --build-info
+```
+
+Add the custom rule file:
+
+```bash
+sudo vim /etc/suricata/suricata.yaml
+```
+
+In Vim, use `/` to search for the `rule-files` section.
+
+Search keyword:
+
+```text
+rule-files
+```
+
+Modify `default-rule-path`:
+
+```text
+default-rule-path: /home/student/745_project
+```
+
+Comment out the original rule file:
+
+```text
+# - suricata.rules
+```
+
+Add the custom rule file:
+
+```text
+- dns_attack.rules
+```
+
+## 3.2 Install and Configure OpenClaw in WSL2
+
+### 1. Prepare the Environment
+
+Install the required dependencies:
+
+```bash
+sudo apt update
+sudo apt install -y curl ca-certificates git
+```
+
+Check whether WSL2 is using `systemd`:
+
+```bash
+ps -p 1 -o comm=
+```
+
+Expected output:
+
+```text
+systemd
+```
+
+If the output is not `systemd`, enable it by editing the WSL configuration file:
+
+```bash
+sudo nano /etc/wsl.conf
+```
+
+Add the following content:
+
+```bash
+[boot]
+systemd=true
+```
+
+Then, in Windows PowerShell, run:
+
+```powershell
+wsl --shutdown
+```
+
+Restart WSL2 after running the command.
+
+### 2. Install OpenClaw
+
+Install OpenClaw using the official installation script:
+
+```bash
+curl -fsSL https://openclaw.ai/install.sh | bash
+```
+
+### 3. Verify the OpenClaw Installation
+
+Check the OpenClaw gateway status:
+
+```bash
+openclaw gateway status
+```
+
+If the output shows:
+
+```text
+openclaw: command not found
+```
+
+Run the following commands to reload the shell environment and fix the OpenClaw command path:
+
+```bash
+source ~/.bashrc
+hash -r
+which openclaw
+```
