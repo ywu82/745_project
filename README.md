@@ -373,3 +373,54 @@ source ~/.bashrc
 hash -r
 which openclaw
 ```
+4. Slack and OpenClaw Integration
+
+Refer: [https://www.youtube.com/watch?v=gOUbJA9YFiE&t=94s]
+
+5. OpenClaw Skills Configuration
+
+To configure the OpenClaw skill, provide the following prompt directly to OpenClaw:
+
+```text
+Please read and use this file:
+
+/home/allen/.openclaw/workspace/ids-analysis/ids_log_analysis.md
+
+This file is a specification for an IDS/SIEM/log-analysis skill. Please configure it as a usable OpenClaw skill.
+
+Requirements:
+
+1. Create the skill directory:
+/home/allen/.openclaw/workspace/skills/ids-analysis/
+
+2. Create the main skill file:
+/home/allen/.openclaw/workspace/skills/ids-analysis/SKILL.md
+
+3. `SKILL.md` must include YAML frontmatter:
+name: ids-analysis
+description: Analyze IDS, SIEM, Suricata, Zeek, firewall, DNS, and security logs with cautious SOC-style reporting.
+
+4. Convert the core content from `ids_log_analysis.md` into `SKILL.md`. Do not blindly copy the whole file. Keep these requirements:
+- Act as a SOC analyst.
+- Support directory input, single log file input, multiple log file input, and raw log content.
+- The final output must start with `[GPT analyzed]:`.
+- Do not overclaim that an attack is confirmed unless the logs clearly prove it.
+- Clearly separate evidence from inference.
+- Explain the limitations of the available logs.
+- Provide practical mitigation recommendations.
+- The skill should work well when called from Python through `openclaw agent --message` to analyze a specified log file.
+
+5. If the original file is too long, place the detailed rules here:
+/home/allen/.openclaw/workspace/skills/ids-analysis/references/ids_log_analysis.md
+
+Then make `SKILL.md` explain when to read that reference file.
+
+6. After creating the skill, verify:
+- `SKILL.md` exists.
+- The YAML frontmatter is valid.
+- The skill name is `ids-analysis`.
+- The description is clear enough for the agent to trigger this skill for IDS/log-analysis tasks.
+
+7. Finally, tell me which files you created or modified, and show me the recommended prompt I should use later to analyze a log file with this skill.
+
+```
