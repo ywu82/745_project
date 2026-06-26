@@ -302,7 +302,7 @@ Add the custom rule file:
 
 ## 3.2 Install and Configure OpenClaw in WSL2
 
-### 1. Prepare the Environment
+1. Prepare the Environment
 
 Install the required dependencies:
 
@@ -344,7 +344,7 @@ wsl --shutdown
 
 Restart WSL2 after running the command.
 
-### 2. Install OpenClaw
+2. Install OpenClaw
 
 Install OpenClaw using the official installation script:
 
@@ -352,7 +352,7 @@ Install OpenClaw using the official installation script:
 curl -fsSL https://openclaw.ai/install.sh | bash
 ```
 
-### 3. Verify the OpenClaw Installation
+3. Verify the OpenClaw Installation
 
 Check the OpenClaw gateway status:
 
