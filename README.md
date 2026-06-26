@@ -382,45 +382,55 @@ Refer: [https://www.youtube.com/watch?v=gOUbJA9YFiE&t=94s]
 To configure the OpenClaw skill, provide the following prompt directly to OpenClaw:
 
 ```text
-Please read and use this file:
+Please read this file:
 
-/home/allen/.openclaw/workspace/ids-analysis/ids_log_analysis.md
+~/745_project/analysis.md
 
-This file is a specification for an IDS/SIEM/log-analysis skill. Please configure it as a usable OpenClaw skill.
+This file contains the reference material/specification for an IDS/security log analysis workflow. I want you to turn it into a reusable OpenClaw skill.
+
+Create the skill here:
+
+~/.openclaw/workspace/skills/ids-analysis/SKILL.md
 
 Requirements:
 
-1. Create the skill directory:
-/home/allen/.openclaw/workspace/skills/ids-analysis/
+1. Create any missing directories.
 
-2. Create the main skill file:
-/home/allen/.openclaw/workspace/skills/ids-analysis/SKILL.md
+2. Create a valid OpenClaw skill named `ids-analysis`.
 
-3. `SKILL.md` must include YAML frontmatter:
+3. The `SKILL.md` file must include YAML frontmatter:
+
 name: ids-analysis
 description: Analyze IDS, SIEM, Suricata, Zeek, firewall, DNS, and security logs with cautious SOC-style reporting.
 
-4. Convert the core content from `ids_log_analysis.md` into `SKILL.md`. Do not blindly copy the whole file. Keep these requirements:
+4. Use the content from `~/745_project/analysis.md` as the source material, but rewrite it into a clean skill instruction file instead of blindly copying everything.
+
+5. The skill should instruct the agent to:
 - Act as a SOC analyst.
-- Support directory input, single log file input, multiple log file input, and raw log content.
-- The final output must start with `[GPT analyzed]:`.
-- Do not overclaim that an attack is confirmed unless the logs clearly prove it.
+- Analyze IDS, SIEM, Suricata, Zeek, firewall, DNS, and general security logs.
+- Support a single log file, multiple log files, a directory of logs, or raw pasted log content.
+- Identify suspicious or benign behavior.
+- Extract key evidence such as source IP, destination IP, port, protocol, timestamp, alert signature, domain, URL, frequency, and indicators.
 - Clearly separate evidence from inference.
-- Explain the limitations of the available logs.
+- Avoid claiming confirmed compromise unless the logs prove it.
+- Explain limitations of the available evidence.
 - Provide practical mitigation recommendations.
-- The skill should work well when called from Python through `openclaw agent --message` to analyze a specified log file.
+- Start the final analysis with `[GPT analyzed]:`.
 
-5. If the original file is too long, place the detailed rules here:
-/home/allen/.openclaw/workspace/skills/ids-analysis/references/ids_log_analysis.md
+6. If useful, copy the original source document into:
 
-Then make `SKILL.md` explain when to read that reference file.
+~/.openclaw/workspace/skills/ids-analysis/references/analysis.md
 
-6. After creating the skill, verify:
-- `SKILL.md` exists.
+Then make `SKILL.md` mention that this reference should be read when more detail is needed.
+
+7. After creating the skill, verify that:
+- `~/.openclaw/workspace/skills/ids-analysis/SKILL.md` exists.
 - The YAML frontmatter is valid.
-- The skill name is `ids-analysis`.
-- The description is clear enough for the agent to trigger this skill for IDS/log-analysis tasks.
+- The skill description is clear enough for the agent to trigger it for IDS/log analysis tasks.
 
-7. Finally, tell me which files you created or modified, and show me the recommended prompt I should use later to analyze a log file with this skill.
+8. Finally, tell me:
+- Which files you created.
+- Whether the skill is ready to use.
+- The exact prompt I should use later to analyze a log file with this skill.
 
 ```
