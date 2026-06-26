@@ -3,7 +3,7 @@ from pathlib import Path
 import json
 
 
-FAST_LOG_PATH = "/home/student/INCS745/term_project/collected_fast.log"
+FAST_LOG_PATH = "/home/student/745_project/collected_fast.log"
 SLACK_SOC_TARGET = "channel:C0BBUL7A4BF"
 SLACK_PERSONAL_TARGET = "channel:D0BCSAPKCV6"
 
