@@ -6,11 +6,11 @@ from run_agent import agent_run
 
 
 # 原始 Suricata fast.log
-FAST_LOG_PATH = "/mnt/d/INCS745/term_project/fast.log"
+FAST_LOG_PATH = "/home/student/INCS745/term_project/fast.log"
 
 # 采集出来的新 fast.log
 # 这个文件只保存本轮采集到的 alert
-OUTPUT_FAST_LOG_PATH = "/mnt/d/INCS745/term_project/collected_fast.log"
+OUTPUT_FAST_LOG_PATH = "/home/student/INCS745/term_project/collected_fast.log"
 
 # 初始读取范围：参考时间往前多少分钟
 # 也是每轮采集结束后的暂停时间
