@@ -24,3 +24,12 @@ alert dns any any -> any any (msg:"Suspicious DNS TXT query with long query name
 #     rev:1;
 # )
 alert dns any any -> any any (msg:"Likely iodine DNS tunnel - long TXT query under ggy666.tk"; dns.rrtype:TXT; dns.query; content:"ggy666.tk"; nocase; bsize:>80; sid:9000005; rev:1;)
+
+# The Rule for Demo and work in live status:
+
+alert dns any any -> any any (msg:"DNS Tunnel Lab - TXT query observed"; dns.rrtype:TXT; sid:9001001; rev:1;)
+alert dns any any -> any any (msg:"DNS Tunnel Lab - suspicious domain ggy666.tk"; dns.query; content:"ggy666.tk"; nocase; sid:9001002; rev:1;)
+alert dns any any -> any any (msg:"DNS Tunnel Lab - long DNS query possible tunneling"; dns.query; bsize:>80; sid:9001003; rev:1;)
+alert dns any any -> any any (msg:"DNS Tunnel Lab - TXT query to suspicious domain ggy666.tk"; dns.rrtype:TXT; dns.query; content:"ggy666.tk"; nocase; sid:9001004; rev:1;)
+alert dns any any -> any any (msg:"DNS Tunnel Lab - encoded subdomain pattern"; dns.query; pcre:"/[A-Za-z0-9_-]{20,}\..*\.ggy666\.tk/i"; sid:9001005; rev:1;)
+alert dns any any -> any any (msg:"DNS Tunnel Lab - high frequency DNS queries from same source"; dns.query; detection_filter:track by_src, count 10, seconds 30; sid:9001006; rev:1;)
