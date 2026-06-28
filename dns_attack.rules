@@ -27,9 +27,9 @@ alert dns any any -> any any (msg:"Likely iodine DNS tunnel - long TXT query und
 
 # The Rule for Demo and work in live status:
 
-alert dns any any -> any any (msg:"DNS Tunnel Lab - TXT query observed"; dns.rrtype:TXT; sid:9001001; rev:1;)
-alert dns any any -> any any (msg:"DNS Tunnel Lab - suspicious domain ggy666.tk"; dns.query; content:"ggy666.tk"; nocase; sid:9001002; rev:1;)
-alert dns any any -> any any (msg:"DNS Tunnel Lab - long DNS query possible tunneling"; dns.query; bsize:>80; sid:9001003; rev:1;)
-alert dns any any -> any any (msg:"DNS Tunnel Lab - TXT query to suspicious domain ggy666.tk"; dns.rrtype:TXT; dns.query; content:"ggy666.tk"; nocase; sid:9001004; rev:1;)
-alert dns any any -> any any (msg:"DNS Tunnel Lab - encoded subdomain pattern"; dns.query; pcre:"/[A-Za-z0-9_-]{20,}\..*\.ggy666\.tk/i"; sid:9001005; rev:1;)
-alert dns any any -> any any (msg:"DNS Tunnel Lab - high frequency DNS queries from same source"; dns.query; detection_filter:track by_src, count 10, seconds 30; sid:9001006; rev:1;)
+alert udp any any -> any 5300 (msg:"DNS Tunnel Lab - UDP 5300 DNS query observed"; sid:9002001; rev:1;)
+alert udp any any -> any 5300 (msg:"DNS Tunnel Lab - suspicious domain ggy666.tk in raw DNS query"; content:"|06|ggy666|02|tk|00|"; sid:9002002; rev:1;)
+alert udp any any -> any 5300 (msg:"DNS Tunnel Lab - TXT query over UDP 5300"; content:"|00 10 00 01|"; sid:9002003; rev:1;)
+alert udp any any -> any 5300 (msg:"DNS Tunnel Lab - long UDP DNS query possible tunneling"; dsize:>100; sid:9002004; rev:1;)
+alert udp any any -> any 5300 (msg:"DNS Tunnel Lab - possible encoded subdomain payload"; pcre:"/[A-Za-z0-9_-]{20,}/"; sid:9002005; rev:1;)
+alert udp any any -> any 5300 (msg:"DNS Tunnel Lab - high frequency DNS tunnel queries over UDP 5300"; detection_filter:track by_src, count 10, seconds 30; sid:9002006; rev:1;)
