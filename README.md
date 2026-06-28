@@ -663,3 +663,31 @@ sudo suricata --pcap=eth0 -c /etc/suricata/suricata.yaml -l .
 ```
 
 This runs Suricata in the foreground. You will see Suricata start listening, and the terminal will be occupied while it is running.
+
+# 6. Attack Chain
+
+Threat → Attack → Vulnerability / Weakness → Bad Impact
+
+In this project, it corresponds to:
+
+Attacker-controlled DNS infrastructure
+→ DNS tunneling through encoded TXT queries
+→ DNS egress traffic is allowed / DNS monitoring is weak
+→ Data exfiltration or C2 communication
+
+1. Threat：
+An external attacker controls a malicious DNS domain and DNS server.
+
+2. Attack：
+DNS tunneling through encoded DNS TXT queries.
+
+3. Vulnerability / Weakness：
+The environment allows outbound DNS traffic to an untrusted external DNS server, and DNS queries are not deeply inspected for tunneling indicators.
+
+4. Bad Impact：
+- Data exfiltration
+- Command and Control
+- Bypassing firewall controls
+- Stealthy communication channel
+- Delayed incident response
+
