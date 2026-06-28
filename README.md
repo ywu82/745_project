@@ -516,8 +516,9 @@ Add the following content:
 
 REAL_DIG="/usr/bin/dig"
 
-DNS_SERVER="172.23.48.1"
-DNS_PORT="5300"
+DNS_SERVER="<Windows gateway IP>"
+# If Windows 53 has been engaged, use 5300 to replace
+DNS_PORT="53"
 DOMAIN="ggy666.tk"
 
 ORIGINAL_DOMAIN="$1"
