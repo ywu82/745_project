@@ -618,3 +618,45 @@ It should be restored to:
 ```bash
 /usr/bin/dig
 ```
+
+# 5 Starting Suricata for Real-Time Monitoring
+
+1. Confirm the Network Interface
+
+First, check the network interfaces:
+
+```bash
+ip a
+```
+
+In WSL2, the interface is usually:
+
+```bash
+eth0
+```
+
+So in most cases, you will monitor `eth0`.
+
+2. Test the Configuration and Rules
+
+Run a syntax test first:
+
+```bash
+sudo suricata -T -c /etc/suricata/suricata.yaml
+```
+
+If you see output similar to the following:
+
+```bash
+Configuration provided was successfully loaded. Exiting.
+```
+
+it means the configuration and rules are correct.
+
+3. Start Real-Time Monitoring
+
+```bash
+sudo rm -f fast.log eve.json stats.log && sudo suricata -i eth0 -c /etc/suricata/suricata.yaml
+```
+
+This runs Suricata in the foreground. You will see Suricata start listening, and the terminal will be occupied while it is running.
