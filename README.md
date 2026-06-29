@@ -655,6 +655,7 @@ it means the configuration and rules are correct.
 
 3. Start Real-Time Monitoring
 
+Suricata launch command:
 ```bash
 sudo pkill suricata 2>/dev/null
 sudo rm -f fast.log eve.json stats.log suricata.log
@@ -663,6 +664,13 @@ sudo suricata --pcap=eth0 -c /etc/suricata/suricata.yaml -l .
 ```
 
 This runs Suricata in the foreground. You will see Suricata start listening, and the terminal will be occupied while it is running.
+
+tcpdump launch command:
+
+```bash
+sudo tcpdump -i eth0 udp port 5300 -nn -X -c 2
+```
+
 
 # 6. Attack Chain
 
