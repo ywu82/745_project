@@ -668,7 +668,7 @@ This runs Suricata in the foreground. You will see Suricata start listening, and
 tcpdump launch command:
 
 ```bash
-sudo tcpdump -i eth0 udp port 5300 -nn -X -c 2
+sudo tcpdump -i eth0 udp port 5300 -nn -X
 ```
 
 
